@@ -1,0 +1,24 @@
+{
+  "name": "zombie-game",
+  "version": "1.0.0",
+  "description": "Zombie themed cellular automata simulator",
+  "main": "zombieServer.js",
+  "dependencies": {
+    "http-server": "^0.9.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node zombieServer.js"
+ },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MikeHathaway/Zombie-game.git"
+  },
+  "author": "Mike Hathaway",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MikeHathaway/Zombie-game/issues"
+  },
+  "homepage": "https://github.com/MikeHathaway/Zombie-game#readme"
+}
