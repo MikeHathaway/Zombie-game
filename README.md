@@ -1,16 +1,13 @@
 # Zombie-game
 
-//ZOMBIE SIMULATION GAME or 'Mikes game of Zombies'
+ZOMBIE SIMULATION GAME or 'Mikes game of Zombies'
 
-//Game of autnomous agents with user defined rules, and an overriding goal of living as long as possible.
-	//Secondary goal of establishing order?
-		//If so, how do you define order?
-		//Could be interesting to randomly generate personality trai
+Game of autnomous agents with user defined rules, and an overriding goal of living as long as possible.
 
-	//Played at Society scale
-		//Each pixel represents an autonomous agent
+It is played at a society scale, with each pixel representing an autonomous agent. Actions are taken by agents as a result of their surroundings. 
 
-		//Actions will be taken by these agents as a reflection of their surroundings
-			//More than one pixel out
+This game is turn based.
 
-	//This game is turn based
+TO DO:
+	Secondary goal of establishing order? If so, how do you define order?
+
