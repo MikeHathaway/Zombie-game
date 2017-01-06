@@ -4,13 +4,14 @@
   "description": "Zombie themed cellular automata simulator",
   "main": "zombieServer.js",
   "dependencies": {
+    "express": "^4.14.0",
     "http-server": "^0.9.0"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
- },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MikeHathaway/Zombie-game.git"
