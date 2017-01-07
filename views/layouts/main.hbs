@@ -1,35 +1,49 @@
 <!DOCTYPE HTML>
 
-<html>
+<html lang="en">
 <head>
+
+  <link rel="stylesheet" href="public/css/style.css" type="text/css">
+  <!--
+  <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://fonts.google.com/?selection.family=Indie+Flower" type="text/css">
+  -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>WELCOME TO ZOMBIEVILLE</title>
+  <title>Mike's Game of Zombies</title>
 </head>
 <body>
-  <h1>Howdy Dern<h2>
-  <canvas id="c" width="200" height="200"> </canvas>
-  <script>
-    var c = document.querySelector("#c");
-    var ctx = c.getContext("2d");
-    ctx.fillStyle = "green";
-    ctx.fillRect(0,0,50,50);
-    ctx.fillStyle = "red";
-    ctx.fillRect(50,50,50,50);
-    ctx.fillStyle = "blue";
-    ctx.fillRect(100,100,50,50);
+  <div class="container-fluid">
+    <h1>Welcome to Zombieville<h1>
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Usa_edcp_location_map.svg/300px-Usa_edcp_location_map.svg.png" class="img-responsive" style="width:1000px;height:500px;">
+    <p>
+      Start Game
+    </p>
+    <canvas id="c" width="400" height="400"> </canvas>
+  </div>
+    <script>
+      var c = document.querySelector("#c");
+      var ctx = c.getContext("2d");
+
+      //playing around objects
+      ctx.fillStyle = "green";
+      ctx.fillRect(200,200,50,50);
+      ctx.fillStyle = "red";
+      ctx.fillRect(250,250,50,50);
+      ctx.fillStyle = "blue";
+      ctx.fillRect(300,300,50,50);
 
 
+  /* Holdover for Udacity canvas class
+      var image = new Image();
 
-    var image = new Image();
+      image.onload = function(){
+        console.log("Loaded image");
+        ctx.drawImage(image,150,150,50,50);
+      }
 
-    image.onload = function(){
-      console.log("Loaded image");
-      ctx.drawImage(image,50,50,c.width,c.height);
-    }
-
-    image.src = "2000px-Map_of_USA.svg.png";
-
-  </script>
+      image.src = "2000px-Map_of_USA.svg.png";
+  */
+    </script>
 </body>
 </html>
