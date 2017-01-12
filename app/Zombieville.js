@@ -6,6 +6,8 @@ function startGame(duration, numHum, propZomb){
 	return generateAgents(numHum, propZomb);
 }
 
+//Initatlize user inputs - buttons for starting game, fields for entering conditions
+
 
 //Global Data Structure
 var activeAgents = [];

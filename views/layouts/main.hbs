@@ -12,15 +12,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mike's Game of Zombies</title>
 </head>
+
 <body>
   <div class="container-fluid">
-    <h1>Welcome to Zombieville<h1>
+
+    <a href="https://github.com/MikeHathaway/Zombie-game"><h1 class="link-container red">Welcome to Zombieville<h1></a>
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Usa_edcp_location_map.svg/300px-Usa_edcp_location_map.svg.png" class="img-responsive" style="width:1000px;height:500px;">
-    <p>
-      Start Game
-    </p>
+    <div class="row background">
+      <form>
+        <div class="col-xs-4">
+          <button type="submit">Start Game</button>
+        </div>
+        <div class="col-xs-4">
+          <input type="text" placeholder="Number of generations" required>
+        </div>
+        <div class="col-xs-4">
+          <input type="text" placeholder="Percent starting as Zombies" required>
+        </div>
+        Initatlize Conditions
+      </form>
+    </div>
     <canvas id="c" width="400" height="400"> </canvas>
   </div>
+
     <script>
       var c = document.querySelector("#c");
       var ctx = c.getContext("2d");
@@ -28,10 +42,7 @@
       //playing around objects
       ctx.fillStyle = "green";
       ctx.fillRect(200,200,50,50);
-      ctx.fillStyle = "red";
-      ctx.fillRect(250,250,50,50);
-      ctx.fillStyle = "blue";
-      ctx.fillRect(300,300,50,50);
+
 
 
   /* Holdover for Udacity canvas class
@@ -46,4 +57,5 @@
   */
     </script>
 </body>
+
 </html>
