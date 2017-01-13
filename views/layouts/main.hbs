@@ -16,33 +16,61 @@
 <body>
   <div class="container-fluid">
 
-    <a href="https://github.com/MikeHathaway/Zombie-game"><h1 class="link-container red">Welcome to Zombieville<h1></a>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Usa_edcp_location_map.svg/300px-Usa_edcp_location_map.svg.png" class="img-responsive" style="width:1000px;height:500px;">
+    <a href="https://github.com/MikeHathaway/Zombie-game"><h1 class="link-container">Welcome to Zombieville<h1></a>
+    <canvas class="canvas-outline" id="c" width="1800" height="1170"> </canvas>
+
+    <div class="background">
+      <p>Rules</p>
+      <ol>1:</ol>
+      <ol>2:</ol>
+      <ol>3:</ol>
+    </div>
+
     <div class="row background">
+      <p>Initalize Conditions</p>
       <form>
-        <div class="col-xs-4">
-          <button type="submit">Start Game</button>
-        </div>
+        <div class="col-xs-4 red">
+          <button id="ominousWarning" onclick="startGame()" type="submit">Start Game</button>
+        </div><!--
         <div class="col-xs-4">
           <input type="text" placeholder="Number of generations" required>
         </div>
         <div class="col-xs-4">
           <input type="text" placeholder="Percent starting as Zombies" required>
-        </div>
-        Initatlize Conditions
+        </div> -->
       </form>
     </div>
-    <canvas id="c" width="400" height="400"> </canvas>
   </div>
 
     <script>
       var c = document.querySelector("#c");
       var ctx = c.getContext("2d");
 
-      //playing around objects
-      ctx.fillStyle = "green";
-      ctx.fillRect(200,200,50,50);
+      function startGame() {
+          myGameArea.start();
+          document.querySelector('#ominousWarning').onclick = alertFun;
+          alert('And so it begins...');
+          console.log('And so it begins...');
+      }
 
+      function alertFun(){
+        alert('And so it begins...');
+      }
+
+      var myGameArea = {
+          canvas: c,
+          start: function() {
+              this.canvas.width = canvas.width;
+              this.canvas.height = canvas.height;
+              this.context = this.canvas.getContext("2d");
+              document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+          }
+      }
+
+
+      //playing aroInitialize conditionsund objects
+//      ctx.fillStyle = "green";
+//      ctx.fillRect(200,200,50,50);
 
 
   /* Holdover for Udacity canvas class
