@@ -3,6 +3,8 @@
 
 p {
   color: red;
+  position: relative;
+  left: 15px;
 }
 
 ol {
@@ -15,16 +17,40 @@ body {
   background-image: url('../images/USA.jpg');
   background-size: contain;
   background-repeat: no-repeat;
+  background-color: black;
+}
+
+canvas{
+  border: 1px solid blue;
+  position: relative;
+  z-index: 1;
 }
 
 button {
-  border: 3px;
+  display: inline-block;
+  border: 1px solid red;
+  background-color: grey;
   position: relative;
   left:30px;
   bottom:30px;
+  width: auto;
+  height: 30px;
 }
 
-.canvas-outline{
+input{
+  color: black;
+  display: inline-block;
+  border: 1px solid red;
+  background-color: grey;
+  position: relative;
+  left:30px;
+  bottom:30px;
+  width: auto;
+  height: 30px;
+}
+
+.outline{
+  color: red;
   border-color: red;
   border-width: 3px;
   border-style: solid;

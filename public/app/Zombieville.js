@@ -3,23 +3,43 @@
 
 //this function is still incomplete
 function startGame(duration, numHum, propZomb){
+
+	let generation = 0;
+	timer(generation);
+
+	console.log('The game has started')
+
 	return generateAgents(numHum, propZomb);
+	//gameState = true;
+
 }
 
 //Initatlize user inputs - buttons for starting game, fields for entering conditions
 
 
 //Global Data Structure
+	//alternative means of structuring data. Create a seperate object for each state, with its own set of active agents
+	//states could change colors and have in html seperators
+	//may need to create a population object
+
+const usPopulation = function(){
+	const statePopulations = [
+		{state: "California", population: statePopulation(), activeAgents: []},{}
+	]
+}
+
+
 var activeAgents = [];
 
 
 //Prototype of objects
-var Agents = function(type,speed,trait,color,action,neighbors){
+var Agents = function(type,speed,trait,color,action,location,neighbors){
 	this.type = type;
 	this.speed = speed;
 	this.trait = trait;
 	this.color = color;
 	this.action = action;
+	this.location = location;
 	this.neighbors = surroundingsChecker;
 }
 
@@ -27,14 +47,16 @@ var Agents = function(type,speed,trait,color,action,neighbors){
 	//propZomb is the proportion of Humans that start as zombies
 	//none start as 'transformed'
 function generateAgents(numHum, propZomb){
-	for (var i = 0; i < numHum; i++){
-		var human = new Agents('Human',2,traitSelector(),'Blue');
-		activeAgents.push(human);
-	}
-	for (var i = 0; i < (numHum*propZomb); i++){
-		var zombie = new Agents('Zombie',1,traitSelector(),'Red');
-		activeAgents.push(zombie);
-	}
+	//if(gameState){
+		for (var i = 0; i < numHum; i++){
+			const human = new Agents('Human',2,traitSelector(),'Blue');
+			activeAgents.push(human);
+		}
+		for (var i = 0; i < (numHum*propZomb); i++){
+			const zombie = new Agents('Zombie',1,traitSelector(),'Red');
+			activeAgents.push(zombie);
+		}
+	//}
 }
 
 function traitSelector(){
@@ -74,8 +96,10 @@ function turn(){
 	return activeAgents;
 }
 
-function endGame(){console.log('GAME OVER');
-	return generation = 0, activeAgents.length = 0;
+function endGame(){
+	console.log('GAME OVER');
+	activeAgents.length = 0;
+	return generation = 0;
 }
 
 
@@ -119,7 +143,7 @@ function action(){
 //LIST OF ACTIONS
 	//change from transforming into zombie after two turns elapse
 function bite(agent){
-	var turnsElapsed = 0;
+	let turnsElapsed = 0;
 	while (turnsElapsed < 2){
 		if(agent === 'Human'){
 			agent.type = 'Transforming';
@@ -215,7 +239,11 @@ function assert(expectedBehavior, descriptionOfCorrectBehavior) {
   }
 }
 
-assert(startGame(100, 1000, .1), 'Generate 1000 agents, 10% of which are zombies, and have them interact for 100 turns');
+console.log('game loaded')
+
+//basic test suite
+//assert(startGame(100, 1000, .1), 'Generate 1000 agents, 10% of which are zombies, and have them interact for 100 turns');
 
 //Call on function to start the game
-startGame(100, 1000, .1);
+//potential default starting conditions
+//startGame(100, 1000, .1);
