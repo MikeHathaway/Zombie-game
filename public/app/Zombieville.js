@@ -2,7 +2,7 @@
 
 function ominousWarning(){
 	const warning = "howdy";
-	console.log('it works!?');
+	console.log(warning);
 }
 
 ominousWarning();
