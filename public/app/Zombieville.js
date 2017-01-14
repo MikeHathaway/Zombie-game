@@ -1,12 +1,5 @@
 //ZOMBIE SIMULATION GAME or 'Mikes game of Zombies'
 
-function ominousWarning(){
-	const warning = "howdy";
-	console.log(warning);
-}
-
-ominousWarning();
-
 
 //this function is still incomplete
 function startGame(duration, numHum, propZomb){
