@@ -2,8 +2,10 @@
 
 
 //this function is still incomplete
-function startGame(duration, numHum, propZomb){
+	//x,y represent the canvas width and height to be inputted into random int function
+function startGame(duration, numHum, propZomb,x,y){
 
+	gameLength = duration;
 	let generation = 0;
 	timer(generation);
 
@@ -30,30 +32,30 @@ const usPopulation = function(){
 
 
 var activeAgents = [];
-
+let gameLength = 100;
 
 //Prototype of objects
-var Agents = function(type,speed,trait,color,action,location,neighbors){
+var Agents = function(type,speed,trait,color,location,action,neighbors){
 	this.type = type;
 	this.speed = speed;
 	this.trait = trait;
 	this.color = color;
-	this.action = action;
 	this.location = location;
+	this.action = action;
 	this.neighbors = surroundingsChecker;
 }
 
 //numGenerations an optional argument
 	//propZomb is the proportion of Humans that start as zombies
 	//none start as 'transformed'
-function generateAgents(numHum, propZomb){
+function generateAgents(numHum, propZomb,x,y){
 	//if(gameState){
 		for (var i = 0; i < numHum; i++){
-			const human = new Agents('Human',2,traitSelector(),'Blue');
+			const human = new Agents('Human',2,traitSelector(),'Blue',initialLocation(x,y));
 			activeAgents.push(human);
 		}
 		for (var i = 0; i < (numHum*propZomb); i++){
-			const zombie = new Agents('Zombie',1,traitSelector(),'Red');
+			const zombie = new Agents('Zombie',1,traitSelector(),'Red',initialLocation(x,y));
 			activeAgents.push(zombie);
 		}
 	//}
@@ -78,13 +80,13 @@ function traitSelector(){
 
 
 function timer(generation){
-	if (generation === startGame(duration)){
+	if (generation === gameLength){
 		return endGame();
 	}
 	else{
 		generation += 1;
 	}
-	console.log(generation);
+	console.log(gameLength, generation);
 	return generation;
 }
 
@@ -128,15 +130,16 @@ function action(){
 			bite(neighbor);
 		}
 		else if(agent.type === 'Zombie' && neighbor.type === 'Zombie'){
-			break;
+			move();
 		}
 		else if(agent.type === 'Human' && neighbor.type === 'Zombie'){
 			fight(neighbor);
 		}
 		else if(agent.type === 'Human' && neighbor.type === 'Human'){
-			run();
+			move();
 		}
 	}
+	timer();
 	return neighbors;
 }
 
@@ -167,20 +170,12 @@ function fight(agent){
 	return activeAgents;
 }
 
-//need to add conditional logic to this. Also, in which direction should the agent run?
-	//can a one pixel run be followed by a fight? Ans, best to say no, most likely.
-function run(){
-	agent.walk();
-}
+
 
 
 //ARENA
 	//create the pixelated playing field on which the autonomous agents interact
 	//use map of the continental United States, with starting locations based on population centers
-
-	//still need to incorporate <script> tags
-
-	//Should also incorporate button tags with which to control the ingame action
 
 function sizeGrid(inputWidth, inputHeight){
 	var center = (inputWidth/2, inputHeight/2);
@@ -203,22 +198,29 @@ function initialConditions(USPopulationDistributions){
 
 }
 
+//need to add conditional logic to this. Also, in which direction should the agent run?
+	//can a one pixel run be followed by a fight? Ans, best to say no, most likely.
 
+	//need to check
+function initialLocation(x,y){
+	let startingPos = [];
 
+	startingPos.push(getRandomInt(1,x));
+	startingPos.push(getRandomInt(1,y));
 
-//based upon tutorial that utilized processingJS - width and height are not native variables.
-//That being said altering or utilizing window can be supah dangerous.
-var Walker = function(){
-	this.x = window.width;
-	this.y = window.height;
+	return startingPos;
+}
+
+function location(x,y){
+
 }
 
 //walking function for a 9 cell grid
-Agents.walk = function(){
-	var stepX = getRandomInt(-1,2);
-	var stepY = getRandomInt(-1,2);
-	this.x += stepX;
-	this.Y += stepY;
+Agents.move = function(){
+	let stepX = getRandomInt(-1,2);
+	let stepY = getRandomInt(-1,2);
+
+	return location((this.x + stepX),(this.y + stepY));
 
 }
 

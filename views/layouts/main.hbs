@@ -16,14 +16,20 @@
     function ominousWarning(){
     	alert('And so it begins...');
     }
+    const canvas = document.getElementsByTagName('canvas');
+    canvas.width  = 800;
+    canvas.height = 480;
+
+    //let width = 800; //800
+    //let height = 480; //480
 
    </script>
 
 
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
-  <!--
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+  <!--
   <link rel="stylesheet" href="https://fonts.google.com/?selection.family=Indie+Flower" type="text/css">
   -->
   <meta charset="utf-8">
@@ -37,10 +43,10 @@
     <a href="https://github.com/MikeHathaway/Zombie-game"><h1 class="link-container">Welcome to Zombieville<h1></a>
 
     <div>
-
+      <label for="timer">Timer</label>
     </div>
 
-    <canvas id="map_canvas" width="800" height="480"></canvas>
+    <canvas id="map_canvas" width="device-width" height="device-height"></canvas>
 
     <!-- og box canvas
     <canvas class="outline" id="c" width="1800" height="1170"> </canvas>
@@ -57,7 +63,7 @@
       <p>Initalize Conditions</p>
       <form>
         <div class="col-xs-4 red">
-          <button onclick="ominousWarning(); startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value);" type="button">Start Game</button>
+          <button onclick="ominousWarning(); startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, canvas.width, canvas.height);" type="button">Start Game</button>
         </div>
         <div>
           <div class="col-xs-4">
