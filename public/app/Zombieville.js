@@ -6,12 +6,13 @@
 function startGame(duration, numHum, propZomb,x,y){
 
 	gameLength = duration;
-	let generation = 0;
-	timer(generation);
+	generation = 0;
+
+	turn();
 
 	console.log('The game has started')
 
-	return generateAgents(numHum, propZomb);
+	return generateAgents(numHum, propZomb,x,y);
 	//gameState = true;
 
 }
@@ -30,12 +31,14 @@ const usPopulation = function(){
 	]
 }
 
-
-var activeAgents = [];
+//global variables
+let activeAgents = [];
 let gameLength = 100;
+let generation;
+	//const time = {time:timer()};
 
 //Prototype of objects
-var Agents = function(type,speed,trait,color,location,action,neighbors){
+const Agents = function(type,speed,trait,color,location,action,neighbors){
 	this.type = type;
 	this.speed = speed;
 	this.trait = trait;
@@ -54,7 +57,7 @@ function generateAgents(numHum, propZomb,x,y){
 			const human = new Agents('Human',2,traitSelector(),'Blue',initialLocation(x,y));
 			activeAgents.push(human);
 		}
-		for (var i = 0; i < (numHum*propZomb); i++){
+		for (var j = 0; j < (numHum*propZomb); j++){
 			const zombie = new Agents('Zombie',1,traitSelector(),'Red',initialLocation(x,y));
 			activeAgents.push(zombie);
 		}
@@ -79,23 +82,18 @@ function traitSelector(){
 }
 
 
-function timer(generation){
+
+function turn(){
 	if (generation === gameLength){
 		return endGame();
 	}
 	else{
+		activeAgents.forEach(agent => {
+			return agent.action;
+		});
 		generation += 1;
+		return activeAgents;
 	}
-	console.log(gameLength, generation);
-	return generation;
-}
-
-function turn(){
-	timer();
-	activeAgents.map(agent => {
-		return agent.action;
-	});
-	return activeAgents;
 }
 
 function endGame(){
@@ -106,13 +104,8 @@ function endGame(){
 
 
 //this function is tied up into the canvas construction and recognition
-	//
 function surroundingsChecker(agentPosition){
 	var neighbors = [];
-
-	//for
-		//if
-
 
 
 	return neighbors;
@@ -130,16 +123,15 @@ function action(){
 			bite(neighbor);
 		}
 		else if(agent.type === 'Zombie' && neighbor.type === 'Zombie'){
-			move();
+			agent.move();
 		}
 		else if(agent.type === 'Human' && neighbor.type === 'Zombie'){
 			fight(neighbor);
 		}
 		else if(agent.type === 'Human' && neighbor.type === 'Human'){
-			move();
+			agent.move();
 		}
 	}
-	timer();
 	return neighbors;
 }
 
@@ -170,6 +162,8 @@ function fight(agent){
 	return activeAgents;
 }
 
+//make a global turn call to move the game along after all of the function blocks execute
+	//turn();
 
 
 
@@ -203,25 +197,29 @@ function initialConditions(USPopulationDistributions){
 
 	//need to check
 function initialLocation(x,y){
-	let startingPos = [];
+	let position = [];
 
-	startingPos.push(getRandomInt(1,x));
-	startingPos.push(getRandomInt(1,y));
+	position.push(getRandomInt(1,parseInt(x)));
+	position.push(getRandomInt(1,parseInt(y)));
 
-	return startingPos;
+	return position;
 }
 
+/*
 function location(x,y){
-
-}
+	return [this.x, this.y];
+}*/
 
 //walking function for a 9 cell grid
-Agents.move = function(){
-	let stepX = getRandomInt(-1,2);
-	let stepY = getRandomInt(-1,2);
+const move = function(){
+	let stepX = getRandomInt(-1,this.speed);
+	let stepY = getRandomInt(-1,this.speed);
 
-	return location((this.x + stepX),(this.y + stepY));
+	position[0] += stepX;
+	position[1] += stepY;
 
+	agent.location = position;
+	return agent.location;
 }
 
 //Courtesy of MDN
