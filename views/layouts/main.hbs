@@ -11,40 +11,48 @@
   <script type="text/javascript" src="/UScanvas/Map.js"> </script>
   -->
 
-  <!-- jQuery CDN link-->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-
   <!--interactive content  -->
   <script>
 
-    function ominousWarning(){
-    	alert('And so it begins...');
+    /*
+    //experimenting with more functionalized way of generating the canvas context - modules?
+
+    body.addEventListener("load",function(){
+      var context = document.getElementById("canv").getContext("2d");
+      return context;
+    });
+
+    function generateContext(){
+      return context;
     }
+    */
 
     function displayPopulation(){
+      //generateContext();
       var canvas = document.getElementById("canv");
-      var context = canvas.getContext("2d");
+    	var context = canvas.getContext("2d");
 
-      return activeAgents.forEach(agent =>{
-          context.fillStyle = agent.color;
-          context.fillRect(agent.location[0],agent.location[1],5,5);
-      })
-
+    	return activeAgents.forEach(agent =>{
+    			context.fillStyle = agent.color;
+    			context.fillRect(agent.location[0],agent.location[1],5,5);
+    	});
     }
 
-    //let width = 800; //800
-    //let height = 480; //480
+    function reset() {
+    		return clearCanvas();
+    }
+
+    function clearCanvas(){
+      generateContext();
+      console.log(context, 'this is working?');
+    	return context.clearRect(0,0,canvas.width,canvas.height);
+    }
 
    </script>
 
-
-
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
-  <!--
-  <link rel="stylesheet" href="https://fonts.google.com/?selection.family=Indie+Flower" type="text/css">
-  -->
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mike's Game of Zombies</title>
@@ -55,6 +63,7 @@
 
 -->
 <body>
+
 
   <div class="container-fluid">
 
@@ -78,11 +87,11 @@
       </div>
       <div class="row">
         <form>
-          <div class="col-xs-8 red">
-            <button onclick="ominousWarning(); startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); displayPopulation();" type="button">Start Game</button>
+          <div class="col-xm-8 red">
+            <button class="btn btn-autosize" onclick="ominousWarning(); startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); displayPopulation();" type="button">Start Game</button>
           </div>
-          <div class="col-xs-8 red">
-            <button onclick="endGame()" type="button">Reset</button>
+          <div class="col-xm-8 red">
+            <button class="btn btn-autosize" onclick="endGame(); reset();" type="button">Reset</button>
           </div>
           <div class="row">
             <div class="col-xs-8">
@@ -112,7 +121,7 @@
 
       <div class="background">
         <div class="row col-xs-15">
-          <h1>Cellular Automata</h1>
+          <a href="https://en.wikipedia.org/wiki/Cellular_automaton"><h1>Cellular Automata</h1></a>
             <p></p>
         </div>
 

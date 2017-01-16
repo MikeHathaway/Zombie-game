@@ -2,9 +2,14 @@
 
 
 p {
+  font-family: 'Nosifer', serif;
   color: red;
   position: relative;
   left: 15px;
+}
+
+h1 {
+  font-family: 'Nosifer', serif;
 }
 
 ol {
@@ -17,7 +22,7 @@ body {
   background-image: url('../images/USA.jpg');
   background-size: contain;
   background-repeat: no-repeat;
-  background-color: black;
+  background-color: grey;
 }
 
 
@@ -28,7 +33,6 @@ canvas{
 }
 
 button {
-  display: compact;
   border: 1px solid red;
   background-color: grey;
   position: relative;
@@ -41,7 +45,6 @@ button {
 
 input{
   color: black;
-  display: compact;
   border: 1px solid red;
   background-color: grey;
   position: relative;
@@ -68,7 +71,7 @@ input{
 }
 
 .background{
-  background-color: black;
+  background-color: grey;
 }
 
 .link-container a:hover {

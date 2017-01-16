@@ -1,5 +1,9 @@
 //ZOMBIE SIMULATION GAME or 'Mikes game of Zombies'
 
+function ominousWarning(){
+	alert('And so it begins...');
+}
+
 
 //this function is still incomplete
 	//x,y represent the canvas width and height to be inputted into random int function
@@ -35,6 +39,7 @@ const usPopulation = function(){
 let activeAgents = [];
 let gameLength = 100;
 let generation;
+
 	//const time = {time:timer()};
 
 //Prototype of objects
@@ -88,6 +93,7 @@ function turn(){
 		return endGame();
 	}
 	else{
+		//clearCanvas();
 		activeAgents.forEach(agent => {
 			return agent.action;
 		});
@@ -99,6 +105,7 @@ function turn(){
 function endGame(){
 	console.log('GAME OVER');
 	activeAgents.length = 0;
+	//clearCanvas();
 	return generation = 0;
 }
 
@@ -117,6 +124,8 @@ function surroundingsChecker(agentPosition){
 
 //action determined by positioning - random yet deterministic
 	//need to figure out a way to define neighbors
+
+	//add bite, fight, etc as object methods
 function action(){
 	for (var neighbor in neighbors){
 		if(agent.type === 'Zombie' && neighbor.type === 'Human'){
@@ -137,7 +146,19 @@ function action(){
 
 //LIST OF ACTIONS
 	//change from transforming into zombie after two turns elapse
+
+	//MAY WANT TO SIMPLIFY BITE TO JUST CHANGING TYPE;
+
 function bite(agent){
+	agent.type = 'Zombie';
+	agent.color = 'red';
+
+	return agent;
+
+}
+
+	/*
+	//OLD APPROACH - MORE COMPLEX
 	let turnsElapsed = 0;
 	while (turnsElapsed < 2){
 		if(agent === 'Human'){
@@ -151,7 +172,7 @@ function bite(agent){
 		turnsElapsed += 1
 	}
 	return agent;
-}
+}*/
 
 
 function fight(agent){
@@ -160,6 +181,13 @@ function fight(agent){
     activeAgents.splice(index, 1);
 	}
 	return activeAgents;
+}
+
+
+function build(){
+	let buildPoints = 0;
+
+
 }
 
 //make a global turn call to move the game along after all of the function blocks execute
@@ -243,7 +271,3 @@ console.log('game loaded')
 
 //basic test suite
 //assert(startGame(100, 1000, .1), 'Generate 1000 agents, 10% of which are zombies, and have them interact for 100 turns');
-
-//Call on function to start the game
-//potential default starting conditions
-//startGame(100, 1000, .1);
