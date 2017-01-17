@@ -77,7 +77,8 @@ const game = (function(){
   	this.trait = trait;
   	this.color = color;
   	this.location = location;
-  	this.action = action;
+		//not sure if this is the right way to make this association
+  	this.action = gameObj.action;
   	this.neighbors = surroundingsChecker;
   }
 
@@ -122,7 +123,7 @@ const game = (function(){
         bite(neighbor);
       }
       else if(this.type === 'Zombie' && neighbor.type === 'Zombie'){
-        agent.move();
+        this.move();
       }
       else if(this.type === 'Human' && neighbor.type === 'Zombie'){
         fight(neighbor);
@@ -134,23 +135,21 @@ const game = (function(){
     return neighbors;
   }
 
-  function move(){
-  	let stepX = getRandomInt(-1,this.speed);
-  	let stepY = getRandomInt(-1,this.speed);
+  const move = function(agent){
+  	let stepX = getRandomInt(-1,agent.speed);
+  	let stepY = getRandomInt(-1,agent.speed);
 
-  	position[0] += stepX;
-  	position[1] += stepY;
+  	agent.location[0] += stepX;
+  	agent.location[1] += stepY;
 
-  	agent.location = position;
   	return agent.location;
   }
 
   function bite(agent){
-  	gameObj.agent.type = 'Zombie';
-  	gameObj.agent.color = 'red';
+  	agent.type = 'Zombie';
+  	agent.color = 'red';
 
   	return agent;
-
   }
 
   function fight(agent){
@@ -174,14 +173,15 @@ const game = (function(){
   	else{
 
   		gameObj.activeAgents.forEach(agent => {
-  			return agent.action;
+				//return agent.action
+  			return move(agent);
   		});
   		gameObj.generation += 1;
 
       canvasDrawer.clearCanvas();
       canvasDrawer.displayPopulation();
 
-  		return gameObj.activeAgents;
+  		//return gameObj.activeAgents;
   	}
   }
 

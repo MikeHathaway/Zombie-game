@@ -41,11 +41,10 @@
       </div>
       <div class="row">
         <form>
-          <div class="col-xm-8 red">
+          <div class="col-xm-10 red">
             <button class="btn btn-autosize" onclick="ominousWarning(); game.startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); canvasDrawer.displayPopulation();" type="button">Start Game</button>
-          </div>
-          <div class="col-xm-8 red">
             <button class="btn btn-autosize" onclick="game.endGame();" type="button">End Game</button>
+            <button class="btn btn-autosize" onclick="game.turn();" type="button">Next Turn</button>
           </div>
           <div class="row">
             <div class="col-xs-8">
