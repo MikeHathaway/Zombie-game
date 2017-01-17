@@ -12,6 +12,7 @@
   -->
 
   <!--interactive content  -->
+  <!--
   <script>
 
     /*
@@ -26,7 +27,7 @@
       return context;
     }
     */
-
+/*
     function displayPopulation(){
       //generateContext();
       var canvas = document.getElementById("canv");
@@ -46,9 +47,9 @@
       generateContext();
       console.log(context, 'this is working?');
     	return context.clearRect(0,0,canvas.width,canvas.height);
-    }
+    }*/
 
-   </script>
+  </script> -->
 
   <link rel="stylesheet" href="/css/style.css" type="text/css">
   <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -87,10 +88,10 @@
       <div class="row">
         <form>
           <div class="col-xm-8 red">
-            <button class="btn btn-autosize" onclick="ominousWarning(); startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); displayPopulation();" type="button">Start Game</button>
+            <button class="btn btn-autosize" onclick="ominousWarning(); game.startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); canvasDrawer.displayPopulation();" type="button">Start Game</button>
           </div>
           <div class="col-xm-8 red">
-            <button class="btn btn-autosize" onclick="endGame(); reset();" type="button">Reset</button>
+            <button class="btn btn-autosize" onclick="game.endGame(); canvasDrawer.clearCanvas();" type="button">Reset</button>
           </div>
           <div class="row">
             <div class="col-xs-8">

@@ -9,16 +9,17 @@ function ominousWarning(){
   //seperate module will define the canvas
 const game = (function(){
   let gameObj = {};
-  let gameLength = 100;
+  //let gameLength = 100;
 
-
+  gameObj.generation = 0;
   gameObj.activeAgents = [];
 
   gameObj.startGame = function(duration, numHum, propZomb,x,y){
     console.log(numHum,propZomb);
 
-  	gameLength = duration;
-  	generation = 0;
+    gameObj.gameLength = parseInt(duration);
+
+  	//generation = 0;
   	//turn();
 
   	console.log('The game has started')
@@ -133,21 +134,21 @@ const game = (function(){
 
   }
 
-  function turn(){
-  	if (generation === gameLength){
-  		return endGame();
+  gameObj.turn = function(){
+  	if (gameObj.generation === gameObj.gameLength){
+  		return gameObj.endGame();
   	}
   	else{
   		//clearCanvas();
-  		activeAgents.forEach(agent => {
+  		gameObj.activeAgents.forEach(agent => {
   			return agent.action;
   		});
-  		generation += 1;
-  		return activeAgents;
+  		gameObj.generation += 1;
+  		return gameObj.activeAgents;
   	}
   }
 
-  function endGame(){
+  gameObj.endGame = function(){
   	console.log('GAME OVER');
   	gameObj.activeAgents.length = 0;
   	//clearCanvas();
@@ -164,16 +165,26 @@ const game = (function(){
 }());
 
 
-
+//may want to take a look at fabric.js
 const canvasDrawer = (function(){
   const canvasObj = {};
 
   canvasObj.displayPopulation = function(){
+    var canvas = document.getElementById("canv");
+    var context = canvas.getContext("2d");
 
+    return game.activeAgents.forEach(agent =>{
+        context.fillStyle = agent.color;
+        context.fillRect(agent.location[0],agent.location[1],5,5);
+    });
   }
 
-  canvasObj.clearContext = function(){
+  canvasObj.clearCanvas = function(){
+    var canvas = document.getElementById("canv");
+    var context = canvas.getContext("2d");
 
+    console.log(context, 'this is working?');
+    return context.clearRect(0,0,canvas.width,canvas.height);
   }
 
   return canvasObj;
