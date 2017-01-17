@@ -1,30 +1,63 @@
 //This module contains the games core logic.
 //It is built as a set of methods for a game object.
+	//It is seperated into two main modules. The first, canvasDrawer,
+	// adds a set of methods with which to manipulate the HTML5 Canvas, as well as the UI.
+
+	//The second, game, encapsulates the core game logic that enables this simulation.
 
 function ominousWarning(){
 	alert('And so it begins...');
 }
 
+//may want to take a look at fabric.js
+const canvasDrawer = (function(){
+  const canvasObj = {};
+
+  canvasObj.displayPopulation = function(){
+    var canvas = document.getElementById("canv");
+    var context = canvas.getContext("2d");
+
+    return game.activeAgents.forEach(agent =>{
+        context.fillStyle = agent.color;
+        context.fillRect(agent.location[0],agent.location[1],5,5);
+    });
+  }
+
+  canvasObj.clearCanvas = function(){
+    var canvas = document.getElementById("canv");
+    var context = canvas.getContext("2d");
+
+    return context.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+	canvasObj.writeMessage = function(message){
+		var canvas = document.getElementById("canv");
+    var context = canvas.getContext("2d");
+
+		context.font = "150px Nosifer"
+		context.fillStyle = "red"
+		return context.fillText(message,(300), (canvas.height / 2));
+	}
+
+  return canvasObj;
+}());
+
 //this contains the functions and objects required to generate the data for agents
   //seperate module will define the canvas
 const game = (function(){
-  let gameObj = {};
-  //let gameLength = 100;
+  const gameObj = {};
 
+	//initialize key module scope variables
   gameObj.generation = 0;
   gameObj.activeAgents = [];
 
   gameObj.startGame = function(duration, numHum, propZomb,x,y){
-    console.log(numHum,propZomb);
 
     gameObj.gameLength = parseInt(duration);
-
-  	//generation = 0;
   	//turn();
 
   	console.log('The game has started')
   	return gameObj.generateAgents(numHum, propZomb,x,y);
-  	//gameState = true;
   }
 
   gameObj.generateAgents = function(numHum, propZomb,x,y){
@@ -139,20 +172,24 @@ const game = (function(){
   		return gameObj.endGame();
   	}
   	else{
-  		//clearCanvas();
+
   		gameObj.activeAgents.forEach(agent => {
   			return agent.action;
   		});
   		gameObj.generation += 1;
+
+      canvasDrawer.clearCanvas();
+      canvasDrawer.displayPopulation();
+
   		return gameObj.activeAgents;
   	}
   }
 
   gameObj.endGame = function(){
-  	console.log('GAME OVER');
   	gameObj.activeAgents.length = 0;
-  	//clearCanvas();
-  	return generation = 0;
+    //canvasDrawer.clearCanvas;
+		canvasDrawer.writeMessage('GAME OVER');
+  	return gameObj.generation = 0;
   }
 
   const getRandomInt = function(min,max){
@@ -165,30 +202,7 @@ const game = (function(){
 }());
 
 
-//may want to take a look at fabric.js
-const canvasDrawer = (function(){
-  const canvasObj = {};
 
-  canvasObj.displayPopulation = function(){
-    var canvas = document.getElementById("canv");
-    var context = canvas.getContext("2d");
-
-    return game.activeAgents.forEach(agent =>{
-        context.fillStyle = agent.color;
-        context.fillRect(agent.location[0],agent.location[1],5,5);
-    });
-  }
-
-  canvasObj.clearCanvas = function(){
-    var canvas = document.getElementById("canv");
-    var context = canvas.getContext("2d");
-
-    console.log(context, 'this is working?');
-    return context.clearRect(0,0,canvas.width,canvas.height);
-  }
-
-  return canvasObj;
-}());
 
 
 function assert(expectedBehavior, descriptionOfCorrectBehavior) {
