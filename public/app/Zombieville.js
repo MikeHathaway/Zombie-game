@@ -54,32 +54,35 @@ const game = (function(){
   gameObj.startGame = function(duration, numHum, propZomb,x,y){
 
     gameObj.gameLength = parseInt(duration);
-  	//turn();
 
+		window.setInterval(gameObj.turn,500)
   	console.log('The game has started')
   	return gameObj.generateAgents(numHum, propZomb,x,y);
   }
 
+	//need to add energy level to the agent generation constructor
   gameObj.generateAgents = function(numHum, propZomb,x,y){
     for (let i = 0; i < numHum; i++){
-			const human = new Agents('Human',2,gameObj.traitSelector(),'Blue',initialLocation(x,y));
+			const human = new Agents('Human',2,gameObj.traitSelector(),'Blue',initialLocation(x,y),getRandomInt(10,50));
 			gameObj.activeAgents.push(human);
 		}
 		for (let j = 0; j < (numHum*propZomb); j++){
-			const zombie = new Agents('Zombie',1,gameObj.traitSelector(),'Red',initialLocation(x,y));
+			const zombie = new Agents('Zombie',1,gameObj.traitSelector(),'Red',initialLocation(x,y),getRandomInt(2,40));
 			gameObj.activeAgents.push(zombie);
 		}
   }
 
-  Agents = function(type,speed,trait,color,location,action,neighbors){
+  Agents = function(type,speed,trait,color,location,energyLevel,action,neighbors){
   	this.type = type;
   	this.speed = speed;
   	this.trait = trait;
   	this.color = color;
   	this.location = location;
+		this.energyLevel = energyLevel;
 		//not sure if this is the right way to make this association
   	this.action = gameObj.action;
   	this.neighbors = surroundingsChecker;
+		//add in unit of energy that can increase or decrease based upon actions, automatically decreases each turn
   }
 
   gameObj.traitSelector = function(){
@@ -108,13 +111,38 @@ const game = (function(){
     return position;
   }
 
-  function surroundingsChecker(location){
+	//this may turn into a computational explosion in memory usage
+		//apparent common alternative solution is to check if a cell value !== 0
+  function surroundingsChecker(agent,location){
     //location is an array of length 2 (x, y)
-    let neighbors = [];
+    //let agent.neighbors = [];
 
+		let occupiedLocations = [];
 
+		/*
+		gameObj.activeAgents.forEach(agent = >{
+			occupiedLocations.push(agent.location);
+		});
+
+		gameObj.activeAgents.forEach(agent = >{
+			if(occupiedLocations.indexOf(agent.location[0] + 1) !=== -1 || occupiedLocations.indexOf(agent.location[1] + 1) !=== -1)
+		});
+
+		*/
     return neighbors;
   }
+
+//alternative means of checking for neighbors, see surrounding cell values
+	function cellState(){
+		let cellValue = 0;
+		let occupiedLocations = [];
+
+		gameObj.activeAgents.forEach(agent =>{
+			occupiedLocations.push(agent.location);
+		});
+
+		return cellValue;
+	}
 
 
   gameObj.action = function(){
@@ -166,15 +194,24 @@ const game = (function(){
 
   }
 
+	function checkEnergyLevel(agent,index){
+		if(agent.energyLevel === 0){
+			return gameObj.activeAgents.splice(index,1)
+		}
+	}
+
   gameObj.turn = function(){
   	if (gameObj.generation === gameObj.gameLength){
   		return gameObj.endGame();
   	}
   	else{
-
-  		gameObj.activeAgents.forEach(agent => {
+  		gameObj.activeAgents.forEach((agent,index) => {
 				//return agent.action
-  			return move(agent);
+				agent.energyLevel--;
+				checkEnergyLevel(agent,index);
+  			move(agent);
+
+				return agent;
   		});
   		gameObj.generation += 1;
 
