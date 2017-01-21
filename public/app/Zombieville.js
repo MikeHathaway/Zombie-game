@@ -50,6 +50,7 @@ const game = (function(){
 	//initialize key module scope variables
   gameObj.generation = 0;
   gameObj.activeAgents = [];
+	gameObj.occupiedLocations = occupiedLocations();
 
   gameObj.startGame = function(duration, numHum, propZomb,x,y){
 
@@ -60,14 +61,13 @@ const game = (function(){
   	return gameObj.generateAgents(numHum, propZomb,x,y);
   }
 
-	//need to add energy level to the agent generation constructor
   gameObj.generateAgents = function(numHum, propZomb,x,y){
     for (let i = 0; i < numHum; i++){
-			const human = new Agents('Human',2,gameObj.traitSelector(),'Blue',initialLocation(x,y),getRandomInt(10,50));
+			const human = new Agents('Human',2,gameObj.traitSelector(),'Green',initialLocation(x,y),getRandomInt(10,gameObj.gameLength));
 			gameObj.activeAgents.push(human);
 		}
 		for (let j = 0; j < (numHum*propZomb); j++){
-			const zombie = new Agents('Zombie',1,gameObj.traitSelector(),'Red',initialLocation(x,y),getRandomInt(2,40));
+			const zombie = new Agents('Zombie',1,gameObj.traitSelector(),'Red',initialLocation(x,y),getRandomInt(2,gameObj.gameLength));
 			gameObj.activeAgents.push(zombie);
 		}
   }
@@ -79,10 +79,10 @@ const game = (function(){
   	this.color = color;
   	this.location = location;
 		this.energyLevel = energyLevel;
-		//not sure if this is the right way to make this association
-  	this.action = gameObj.action;
-  	this.neighbors = surroundingsChecker;
-		//add in unit of energy that can increase or decrease based upon actions, automatically decreases each turn
+
+		//not sure if it is necessary to provide additional agent properties.
+  		//this.action = gameObj.action;
+  		//this.neighbors = occupiedLocations;
   }
 
   gameObj.traitSelector = function(){
@@ -112,39 +112,74 @@ const game = (function(){
   }
 
 	//this may turn into a computational explosion in memory usage
-		//apparent common alternative solution is to check if a cell value !== 0
-  function surroundingsChecker(agent,location){
-    //location is an array of length 2 (x, y)
-    //let agent.neighbors = [];
-
-		let occupiedLocations = [];
-
-		/*
-		gameObj.activeAgents.forEach(agent = >{
-			occupiedLocations.push(agent.location);
-		});
-
-		gameObj.activeAgents.forEach(agent = >{
-			if(occupiedLocations.indexOf(agent.location[0] + 1) !=== -1 || occupiedLocations.indexOf(agent.location[1] + 1) !=== -1)
-		});
-
-		*/
-    return neighbors;
-  }
-
-//alternative means of checking for neighbors, see surrounding cell values
-	function cellState(){
-		let cellValue = 0;
-		let occupiedLocations = [];
+	function occupiedLocations(){
+		let occupiedCells = [];
 
 		gameObj.activeAgents.forEach(agent =>{
-			occupiedLocations.push(agent.location);
+			occupiedCells.push([agent.location,agent.type]);
 		});
 
-		return cellValue;
+		return occupiedCells;
+	}
+
+	//there is a problem with this function that is preventing actions from being taken by humans
+  function determineAction(agent){
+		let potentialNeighbors = gameObj.occupiedLocations;
+		//let agent.hasNeighbors = false;
+
+		potentialNeighbors.map((location,index) =>{
+			//location is structured as [[x,y],agent.type]
+			if(agent.location[0] + 1 === location[0][0] && agent.location[1] + 1 === location[0][1] && location[1] === 'Zombie'){
+				//The human discovered it has a zombie for a neighbor...
+					//they now get the opportunity to fight or run away. If they fail, they are now another zombie!!!
+					//success or failure is based upon a simple coin flip function
+					//agent.hasNeighbors = true;
+
+					//can reference neighbor by using gameObj.activeAgents[index]
+					if(agent.type === 'Agressive'){
+						return fight(agent,gameObj.activeAgents[index],index);
+					}
+					else if(agent.type === 'Sedentary'){
+						if(coinFlip()){
+							return run(agent);
+						}
+					}
+					return run(agent);
+			}
+		})
+		//if(agent.hasNeighbors === false){
+		//return move(agent);
+		//}
+  }
+
+	//uses a coin flip to simulate success or failure with running away
+	const run = function(agent){
+		if(coinFlip()){
+			console.log('run: this is working!')
+			return move(agent)
+		}
+		agent.type === 'Zombie'
+		agent.color === 'Blue'
+		console.log('run: this is working!')
+		return agent;
 	}
 
 
+	const fight = function(agent,zombie,index){
+		if(coinFlip()){
+			console.log('Fight: this is working')
+			return gameObj.activeAgents.splice(index,1);
+		}
+		agent.type === 'Zombie'
+		agent.color === 'Blue'
+		console.log('Fight: this is working')
+		return agent;
+	}
+
+
+
+	//this is now very likely obsolete
+	/*
   gameObj.action = function(){
     for (var neighbor in neighbors){
       if(this.type === 'Zombie' && neighbor.type === 'Human'){
@@ -162,6 +197,7 @@ const game = (function(){
     }
     return neighbors;
   }
+	*/
 
   const move = function(agent){
   	let stepX = getRandomInt(-1,agent.speed);
@@ -173,12 +209,7 @@ const game = (function(){
   	return agent.location;
   }
 
-  function bite(agent){
-  	agent.type = 'Zombie';
-  	agent.color = 'red';
-
-  	return agent;
-  }
+	/*
 
   function fight(agent){
   	var agentIndex = gameObj.activeAgents.indexOf(agent);
@@ -193,6 +224,7 @@ const game = (function(){
   	let buildPoints = 0;
 
   }
+	*/
 
 	function checkEnergyLevel(agent,index){
 		if(agent.energyLevel === 0){
@@ -209,7 +241,12 @@ const game = (function(){
 				//return agent.action
 				agent.energyLevel--;
 				checkEnergyLevel(agent,index);
-  			move(agent);
+
+				if(agent.type === 'Zombie'){
+					move(agent)
+				}
+
+				determineAction(agent);
 
 				return agent;
   		});
@@ -218,7 +255,6 @@ const game = (function(){
       canvasDrawer.clearCanvas();
       canvasDrawer.displayPopulation();
 
-  		//return gameObj.activeAgents;
   	}
   }
 
@@ -226,6 +262,7 @@ const game = (function(){
   	gameObj.activeAgents.length = 0;
     //canvasDrawer.clearCanvas;
 		canvasDrawer.writeMessage('GAME OVER');
+		console.log('GAME OVER');
   	return gameObj.generation = 0;
   }
 
@@ -234,6 +271,11 @@ const game = (function(){
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
   }
+
+	//Randomly generates true or false values for use in other functions
+	function coinFlip() {
+    return (Math.floor(Math.random() * 2) == 0);
+	}
 
   return gameObj;
 }());
