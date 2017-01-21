@@ -27,7 +27,8 @@
       <label for="timer">Generation</label>
     </div>
 
-    <canvas class="outline" id="canv" width="1800" height="1170"> </canvas>
+    <!-- old canvas size was width: 1800, height: 1170 -->
+    <canvas class="outline" id="canv" width="400" height="400"> </canvas>
 
     <!-- og box canvas
     <canvas class="outline" id="c" width="1800" height="1170"> </canvas>
@@ -42,7 +43,7 @@
       <div class="row">
         <form>
           <div class="col-xm-10 red">
-            <button class="btn btn-autosize" onclick="ominousWarning(); game.startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 1800, 1170); canvasDrawer.displayPopulation();" type="button">Start Game</button>
+            <button class="btn btn-autosize" onclick="ominousWarning(); game.startGame(document.getElementById('a').value, document.getElementById('b').value, document.getElementById('c').value, 400, 400); canvasDrawer.displayPopulation();" type="button">Start Game</button>
             <button class="btn btn-autosize" onclick="game.endGame();" type="button">End Game</button>
             <button class="btn btn-autosize" onclick="game.turn();" type="button">Next Turn</button>
           </div>

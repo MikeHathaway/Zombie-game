@@ -19,7 +19,7 @@ const canvasDrawer = (function(){
 
     return game.activeAgents.forEach(agent =>{
         context.fillStyle = agent.color;
-        context.fillRect(agent.location[0],agent.location[1],5,5);
+        context.fillRect(agent.location[0],agent.location[1],4,4);
     });
   }
 
@@ -68,7 +68,7 @@ const game = (function(){
 
   gameObj.generateAgents = function(numHum, propZomb,x,y){
     for (let i = 0; i < numHum; i++){
-			const human = new Agents('Human',2,gameObj.traitSelector(),'Green',initialLocation(x,y),getRandomInt(10,gameObj.gameLength));
+			const human = new Agents('Human',2,gameObj.traitSelector(),'Blue',initialLocation(x,y),getRandomInt(10,gameObj.gameLength));
 			gameObj.activeAgents.push(human);
 		}
 		for (let j = 0; j < (numHum*propZomb); j++){
@@ -117,23 +117,10 @@ const game = (function(){
   }
 
 	//this may turn into a computational explosion in memory usage
-	//for some reason this doesnt seem to generate an array ...
-	const identifyLocations = function(){
-		//let occupiedCells = [];
-		let occupiedPlaces = gameObj.occupiedLocations;
 
-		return gameObj.activeAgents.forEach(agent =>{
-			gameObj.occupiedLocations.push([agent.location,agent.type]);
-		});
-
-		//return occupiedCells;
-	}
-
-	//there is a problem with this function that is preventing actions from being taken by humans
   const determineAction = function(agent){
 		let potentialNeighbors = gameObj.occupiedLocations;
-		let agentActionTaken = false;
-		//let agent.hasNeighbors = false;
+		//let agentActionTaken = false;
 
 		potentialNeighbors.map((location,index) =>{
 			//location is structured as [[x,y],agent.type]
@@ -141,26 +128,37 @@ const game = (function(){
 				//The human discovered it has a zombie for a neighbor...
 					//they now get the opportunity to fight or run away. If they fail, they are now another zombie!!!
 					//success or failure is based upon a simple coin flip function
-					//agent.hasNeighbors = true;
 
 					//can reference neighbor by using gameObj.activeAgents[index]
-					if(agent.type === 'Agressive'){
+					if(agent.trait === 'Agressive'){
 						agentActionTaken = true;
 						return fight(agent,gameObj.activeAgents[index],index);
 					}
-					else if(agent.type === 'Sedentary'){
+					else if(agent.trait === 'Sedentary'){
 						if(coinFlip()){
 							agentActionTaken = true;
+							console.log('NEIGHBORS!?')
 							return run(agent);
 						}
 					}
 					agentActionTaken = true;
+					console.log('YARR',agent.trait)
 					return run(agent);
 			}
+
 		})
+		/*
 		if(agentActionTaken = false){
 			return move(agent)
 		}
+		//alternative means
+		else{
+			if(coinFlip()){
+				return move(agent);
+			}
+		}
+
+		*/
 		//if(agent.hasNeighbors === false){
 		//return move(agent);
 		//}
@@ -172,51 +170,31 @@ const game = (function(){
 			console.log('run: this is working!')
 			return move(agent)
 		}
-		agent.type === 'Zombie'
-		agent.color === 'Blue'
-		console.log('run: this is working! - why is no one blue?')
+		agent.type = 'Zombie';
+		agent.color = 'Orange';
+		console.log('run: this is working! - why is no one oj?')
 		return agent;
 	}
 
 
 	const fight = function(agent,zombie,index){
-		canvasDrawer.emergentEffects(explosion);
+		//canvasDrawer.emergentEffects(explosion);
 		if(coinFlip()){
 			console.log('Fight: this is working')
 			return gameObj.activeAgents.splice(index,1);
 		}
-		agent.type === 'Zombie'
-		agent.color === 'Blue'
+		agent.type = 'Zombie'
+		agent.color = 'Orange'
+		//agent.energyLevel = 50;
 		console.log('Fight: this is working')
 		return agent;
 	}
 
-
-
-	//this is now very likely obsolete
-	/*
-  gameObj.action = function(){
-    for (var neighbor in neighbors){
-      if(this.type === 'Zombie' && neighbor.type === 'Human'){
-        bite(neighbor);
-      }
-      else if(this.type === 'Zombie' && neighbor.type === 'Zombie'){
-        this.move();
-      }
-      else if(this.type === 'Human' && neighbor.type === 'Zombie'){
-        fight(neighbor);
-      }
-      else if(this.type === 'Human' && neighbor.type === 'Human'){
-        this.move();
-      }
-    }
-    return neighbors;
-  }
-	*/
-
   const move = function(agent){
-  	let stepX = getRandomInt(-1,agent.speed);
-  	let stepY = getRandomInt(-1,agent.speed);
+		//originally had (-1,agent.speed)
+		//ths causes problems with only positive movements occuring
+  	let stepX = getRandomInt(-2,agent.speed);
+  	let stepY = getRandomInt(-2,agent.speed);
 
   	agent.location[0] += stepX;
   	agent.location[1] += stepY;
@@ -239,14 +217,19 @@ const game = (function(){
 	}
 
   gameObj.turn = function(){
-		identifyLocations();
+		//identifyLocations();
   	if (gameObj.generation === gameObj.gameLength){
   		return gameObj.endGame();
   	}
   	else{
+			let actionsTaken = 0;
+			let actionsToTake = gameObj.activeAgents.length - 1;
+
   		gameObj.activeAgents.forEach((agent,index) => {
-				//return agent.action
+				//may be a good idea to also check occupied locations at this point
+				gameObj.occupiedLocations.push([agent.location,agent.type]);
 				agent.energyLevel--;
+
 				checkEnergyLevel(agent,index);
 
 				if(agent.type === 'Zombie'){
@@ -255,12 +238,19 @@ const game = (function(){
 				else if(agent.type === 'Human'){
 					determineAction(agent);
 				}
+				actionsTaken++;
 				return agent;
   		});
   		gameObj.generation += 1;
 
       canvasDrawer.clearCanvas();
       canvasDrawer.displayPopulation();
+
+			//need to reset the array each turn so it doesnt overwhelm the cpu
+				//the location of this expression at the end of turn() prevents the action calculations from taking place.
+			if(actionsTaken === actionsToTake){
+				gameObj.occupiedLocations.length = 0;
+			}
   	}
   }
 
@@ -288,6 +278,22 @@ const game = (function(){
 }());
 
 
+
+
+//third module that can print out information that may be of interest to players
+const summaryInformation = (function(){
+	const summaryData = {};
+
+	summaryData.humansConverted = function(){
+
+	}
+
+	//number of Humans
+	//number of Zombies
+
+	//change in number
+
+}());
 
 
 
