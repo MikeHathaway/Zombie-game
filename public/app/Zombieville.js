@@ -62,28 +62,29 @@ const game = (function(){
     gameObj.gameLength = parseInt(duration);
 
 		//specifies the real world timing of a turn
-		window.setInterval(gameObj.turn,500)
+		window.setInterval(gameObj.turn,1000)
   	return gameObj.generateAgents(numHum, propZomb,x,y);
   }
 
   gameObj.generateAgents = function(numHum, propZomb,x,y){
     for (let i = 0; i < numHum; i++){
-			const human = new Agents('Human',2,gameObj.traitSelector(),'Blue',initialLocation(x,y),getRandomInt(10,gameObj.gameLength));
+			const human = new Agents('Human',3,gameObj.traitSelector(),'Blue',initialLocation(x,y),getRandomInt(10,gameObj.gameLength),true);
 			gameObj.activeAgents.push(human);
 		}
 		for (let j = 0; j < (numHum*propZomb); j++){
-			const zombie = new Agents('Zombie',1,gameObj.traitSelector(),'Red',initialLocation(x,y),getRandomInt(2,gameObj.gameLength));
+			const zombie = new Agents('Zombie',2,gameObj.traitSelector(),'Red',initialLocation(x,y),getRandomInt(2,gameObj.gameLength),true);
 			gameObj.activeAgents.push(zombie);
 		}
   }
 
-  Agents = function(type,speed,trait,color,location,energyLevel,action,neighbors){
+  Agents = function(type,speed,trait,color,location,energyLevel,needsToAct){
   	this.type = type;
   	this.speed = speed;
   	this.trait = trait;
   	this.color = color;
   	this.location = location;
 		this.energyLevel = energyLevel;
+		this.needsToAct = needsToAct;
 
 		//not sure if it is necessary to provide additional agent properties.
   		//this.action = gameObj.action;
@@ -120,10 +121,9 @@ const game = (function(){
 
   const determineAction = function(agent){
 		let potentialNeighbors = gameObj.occupiedLocations;
-		//let agentActionTaken = false;
 
-		potentialNeighbors.map((location,index) =>{
-			//location is structured as [[x,y],agent.type]
+		potentialNeighbors.forEach((location,index) =>{
+			//occupiedLocations is structured as [[x,y],agent.type]
 			if(agent.location[0] + 1 === location[0][0] && agent.location[1] + 1 === location[0][1] && location[1] === 'Zombie'){
 				//The human discovered it has a zombie for a neighbor...
 					//they now get the opportunity to fight or run away. If they fail, they are now another zombie!!!
@@ -131,37 +131,30 @@ const game = (function(){
 
 					//can reference neighbor by using gameObj.activeAgents[index]
 					if(agent.trait === 'Agressive'){
-						agentActionTaken = true;
+						agent.needsToAct = false;
 						return fight(agent,gameObj.activeAgents[index],index);
 					}
 					else if(agent.trait === 'Sedentary'){
 						if(coinFlip()){
-							agentActionTaken = true;
+							agent.needsToAct = false;
 							console.log('NEIGHBORS!?')
 							return run(agent);
 						}
 					}
-					agentActionTaken = true;
-					console.log('YARR',agent.trait)
+					agent.needsToAct = false;
 					return run(agent);
 			}
-
+			//this approach results in an excessive cascade of coin flips
+			/*
+			else if(coinFlip()){
+				return move(agent);
+			}*/
 		})
-		/*
-		if(agentActionTaken = false){
-			return move(agent)
-		}
-		//alternative means
-		else{
+		if(agent.needsToAct === true){
 			if(coinFlip()){
 				return move(agent);
 			}
 		}
-
-		*/
-		//if(agent.hasNeighbors === false){
-		//return move(agent);
-		//}
   }
 
 	//uses a coin flip to simulate success or failure with running away
@@ -172,7 +165,7 @@ const game = (function(){
 		}
 		agent.type = 'Zombie';
 		agent.color = 'Orange';
-		console.log('run: this is working! - why is no one oj?')
+		console.log('run: this is working! -oj?')
 		return agent;
 	}
 
@@ -193,8 +186,8 @@ const game = (function(){
   const move = function(agent){
 		//originally had (-1,agent.speed)
 		//ths causes problems with only positive movements occuring
-  	let stepX = getRandomInt(-2,agent.speed);
-  	let stepY = getRandomInt(-2,agent.speed);
+  	let stepX = getRandomInt((-1 * agent.speed),agent.speed);
+  	let stepY = getRandomInt((-1 * agent.speed),agent.speed);
 
   	agent.location[0] += stepX;
   	agent.location[1] += stepY;
@@ -284,8 +277,13 @@ const game = (function(){
 const summaryInformation = (function(){
 	const summaryData = {};
 
-	summaryData.humansConverted = function(){
+	summaryData.begNumHum = 0;
+	summaryData.begNumZomb = 0;
 
+	summaryData.numConverted = 0;
+
+	summaryData.percentConverted = function(){
+		return numConverted / begNumHum;
 	}
 
 	//number of Humans
